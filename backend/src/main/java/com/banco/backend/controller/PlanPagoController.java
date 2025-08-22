@@ -24,7 +24,7 @@ public class PlanPagoController {
 
     @PutMapping("/{id}")
     public PlanPago update(@PathVariable Integer id, @RequestBody PlanPago p){
-        p.setCuotaID(id);
+        p.setCuotaid(id);
         return repo.save(p);
     }
 

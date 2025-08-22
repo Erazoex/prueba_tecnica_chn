@@ -4,7 +4,7 @@ import { api } from '../../api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const ClienteForm = () => {
-  const [cliente, setCliente] = useState({ nombre: '', correo: '' });
+  const [cliente, setCliente] = useState({ nombre: '', apellido: '', numero_identificacion: '', fecha_nacimiento: '', direccion: '', correo: '', telefono: '' });
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -27,8 +27,28 @@ const ClienteForm = () => {
           <Form.Control type="text" value={cliente.nombre} onChange={e => setCliente({ ...cliente, nombre: e.target.value })} required/>
         </Form.Group>
         <Form.Group className="mb-3">
+          <Form.Label>Apellido</Form.Label>
+          <Form.Control type="text" value={cliente.apellido} onChange={e => setCliente({ ...cliente, apellido: e.target.value })} required/>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Número de Identificación</Form.Label>
+          <Form.Control type="text" value={cliente.numero_identificacion} onChange={e => setCliente({ ...cliente, numero_identificacion: e.target.value })} required/>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Fecha de Nacimiento</Form.Label>
+          <Form.Control type="date" value={cliente.fecha_nacimiento} onChange={e => setCliente({ ...cliente, fecha_nacimiento: e.target.value })} required/>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Dirección</Form.Label>
+          <Form.Control type="text" value={cliente.direccion} onChange={e => setCliente({ ...cliente, direccion: e.target.value })} />
+        </Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Correo</Form.Label>
-          <Form.Control type="email" value={cliente.correo} onChange={e => setCliente({ ...cliente, correo: e.target.value })} required/>
+          <Form.Control type="email" value={cliente.correo} onChange={e => setCliente({ ...cliente, correo: e.target.value })} />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Teléfono</Form.Label>
+          <Form.Control type="text" value={cliente.telefono} onChange={e => setCliente({ ...cliente, telefono: e.target.value })} />
         </Form.Group>
         <Button variant="primary" type="submit">{id ? 'Actualizar' : 'Crear'}</Button>
       </Form>

@@ -4,23 +4,37 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "clientes")
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer clienteID;
+    private Integer clienteid;
 
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
+
+    @Column(name = "apellido", nullable = false, length = 100)
     private String apellido;
-    private String numeroIdentificacion;
-    private LocalDate fechaNacimiento;
+
+    @Column(name = "numero_identificacion", nullable = false, unique = true, length = 50)
+    private String numero_identificacion;
+
+    @Column(name = "fecha_nacimiento", nullable = false)
+    private LocalDate fecha_nacimiento;
+
+    @Column(name = "direccion", length = 255)
     private String direccion;
+
+    @Column(name = "correo", unique = true, length = 100)
     private String correo;
+
+    @Column(name = "telefono", length = 20)
     private String telefono;
 
     // Getters y Setters
-    public Integer getClienteID() { return clienteID; }
-    public void setClienteID(Integer clienteID) { this.clienteID = clienteID; }
+    public Integer getClienteid() { return clienteid; }
+    public void setClienteid(Integer clienteid) { this.clienteid = clienteid; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
@@ -28,11 +42,11 @@ public class Cliente {
     public String getApellido() { return apellido; }
     public void setApellido(String apellido) { this.apellido = apellido; }
 
-    public String getNumeroIdentificacion() { return numeroIdentificacion; }
-    public void setNumeroIdentificacion(String numeroIdentificacion) { this.numeroIdentificacion = numeroIdentificacion; }
+    public String getNumero_identificacion() { return numero_identificacion; }
+    public void setNumero_identificacion(String numero_identificacion) { this.numero_identificacion = numero_identificacion; }
 
-    public LocalDate getFechaNacimiento() { return fechaNacimiento; }
-    public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+    public LocalDate getFecha_nacimiento() { return fecha_nacimiento; }
+    public void setFecha_nacimiento(LocalDate fecha_nacimiento) { this.fecha_nacimiento = fecha_nacimiento; }
 
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }

@@ -24,7 +24,7 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     public Cliente update(@PathVariable Integer id, @RequestBody Cliente c){
-        c.setClienteID(id);
+        c.setClienteid(id);
         return repo.save(c);
     }
 
