@@ -7,10 +7,7 @@ const ClienteList = () => {
   const [clientes, setClientes] = useState([]);
 
   useEffect(() => {
-    api.get('/clientes').then(res => {
-      console.log(res.data);
-      setClientes(res.data);
-    });
+    api.get('/clientes').then(res => setClientes(res.data));
   }, []);
 
   return (
@@ -26,29 +23,33 @@ const ClienteList = () => {
             <th>Número de Identificación</th>
             <th>Fecha de Nacimiento</th>
             <th>Dirección</th>
-            <th>Correo</th>
+            <th>Correo Electrónico</th>
             <th>Teléfono</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {clientes.map(c => (
-            <tr key={c.clienteid}>
-              <td>{c.clienteid}</td>
+            <tr key={c.clienteID}>
+              <td>{c.clienteID}</td>
               <td>{c.nombre}</td>
               <td>{c.apellido}</td>
-              <td>{c.numero_identificacion}</td>
-              <td>{c.fecha_nacimiento}</td>
+              <td>{c.numeroIdentificacion}</td>
+              <td>{c.fechaNacimiento}</td>
               <td>{c.direccion}</td>
-              <td>{c.correo}</td>
+              <td>{c.correoElectronico}</td>
               <td>{c.telefono}</td>
               <td>
-                <Link to={`/clientes/edit/${c.clienteid}`} className="btn btn-primary btn-sm me-2">Editar</Link>
-                <Button variant="danger" size="sm" onClick={() => {
-                  api.delete(`/clientes/${c.clienteid}`).then(() =>
-                    setClientes(clientes.filter(cli => cli.clienteid !== c.clienteid))
-                  );
-                }}>Eliminar</Button>
+                <Link to={`/clientes/edit/${c.clienteID}`} className="btn btn-primary btn-sm me-2">Editar</Link>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => api.delete(`/clientes/${c.clienteID}`).then(() =>
+                    setClientes(clientes.filter(cli => cli.clienteID !== c.clienteID))
+                  )}
+                >
+                  Eliminar
+                </Button>
               </td>
             </tr>
           ))}

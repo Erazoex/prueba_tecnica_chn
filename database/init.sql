@@ -1,9 +1,3 @@
--- ==========================================
--- Crear base de datos si no existe
--- ==========================================
-USE master;
-GO
-
 IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = N'SistemaPrestamos')
 BEGIN
     CREATE DATABASE SistemaPrestamos;
@@ -37,7 +31,7 @@ GO
 -- ==========================================
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SolicitudesPrestamo]') AND type in (N'U'))
 BEGIN
-    CREATE TABLE SolicitudesPrestamo (
+    CREATE TABLE Solicitudesprestamo (
         solicitudID INT IDENTITY(1,1) PRIMARY KEY,
         clienteID INT NOT NULL,
         montoSolicitado DECIMAL(18,2) NOT NULL,
@@ -73,7 +67,7 @@ GO
 -- ==========================================
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PlanPagos]') AND type in (N'U'))
 BEGIN
-    CREATE TABLE PlanPagos (
+    CREATE TABLE Planpagos (
         cuotaID INT IDENTITY(1,1) PRIMARY KEY,
         prestamoID INT NOT NULL,
         numeroCuota INT NOT NULL,

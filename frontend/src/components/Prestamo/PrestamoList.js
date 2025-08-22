@@ -8,13 +8,11 @@ const PrestamoList = () => {
   const [clientes, setClientes] = useState([]);
 
   useEffect(() => {
-    // Cargar préstamos
     api.get('/prestamos').then(res => setPrestamos(res.data));
-    // Cargar clientes
     api.get('/clientes').then(res => setClientes(res.data));
   }, []);
 
-  // Crear diccionario de clientes por ID para acceso rápido
+  // Diccionario de clientes por ID para mostrar nombre
   const clientesMap = clientes.reduce((acc, cliente) => {
     acc[cliente.clienteID] = `${cliente.nombre} ${cliente.apellido}`;
     return acc;
@@ -23,15 +21,17 @@ const PrestamoList = () => {
   return (
     <Container className="mt-4">
       <h2>Préstamos</h2>
-      <Link to="/prestamos/create" className="btn btn-success mb-3">Agregar Préstamo</Link>
+      <Link to="/prestamos/create" className="btn btn-success mb-3">
+        Agregar Préstamo
+      </Link>
+
       <Table striped bordered hover responsive>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Solicitud ID</th>
+            <th>PrestamoID</th>
+            <th>SolicitudID</th>
             <th>Cliente</th>
             <th>Monto Aprobado</th>
-            <th>Plazo (meses)</th>
             <th>Tasa Interés (%)</th>
             <th>Fecha de Aprobación</th>
             <th>Estado</th>
@@ -44,17 +44,19 @@ const PrestamoList = () => {
               <td>{p.prestamoID}</td>
               <td>{p.solicitudID}</td>
               <td>
-                {clientesMap[p.clienteID] 
-                  ? `${clientesMap[p.clienteID]} (ID: ${p.clienteID})`
+                {clientesMap[p.clienteID]
+                  ? `${clientesMap[p.clienteID]}`
                   : `ID: ${p.clienteID}`}
               </td>
               <td>{p.montoAprobado}</td>
-              <td>{p.plazoMeses}</td>
               <td>{p.tasaInteres}</td>
               <td>{p.fechaAprobacion ? new Date(p.fechaAprobacion).toLocaleDateString() : ''}</td>
               <td>{p.estado}</td>
               <td>
-                <Link to={`/prestamos/edit/${p.prestamoID}`} className="btn btn-primary btn-sm me-2">
+                <Link
+                  to={`/prestamos/edit/${p.prestamoID}`}
+                  className="btn btn-primary btn-sm me-2"
+                >
                   Editar
                 </Link>
                 <Button

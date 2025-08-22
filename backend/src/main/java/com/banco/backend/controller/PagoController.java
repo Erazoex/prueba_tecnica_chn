@@ -24,7 +24,7 @@ public class PagoController {
 
     @PutMapping("/{id}")
     public Pago update(@PathVariable Integer id, @RequestBody Pago p){
-        p.setPagoid(id);
+        p.setPagoID(id);
         return repo.save(p);
     }
 

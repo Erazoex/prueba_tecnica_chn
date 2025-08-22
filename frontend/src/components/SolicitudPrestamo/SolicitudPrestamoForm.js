@@ -5,8 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const SolicitudPrestamoForm = () => {
   const [solicitud, setSolicitud] = useState({
-    clienteid: '',
-    monto_solicitado: '',
+    montoSolicitado: '',
     estado: 'Pendiente',
     observaciones: ''
   });
@@ -27,29 +26,44 @@ const SolicitudPrestamoForm = () => {
   useEffect(() => {
     if (id) {
       api.get(`/solicitudes/${id}`).then(res => {
-        setSolicitud(res.data);
-        if (res.data.clienteid) {
-          const cliente = res.data.cliente || clientes.find(c => c.clienteid === res.data.clienteid);
-          if (cliente) setClienteSeleccionado(cliente);
+        setSolicitud({
+          montoSolicitado: res.data.montoSolicitado,
+          estado: res.data.estado,
+          observaciones: res.data.observaciones || ''
+        });
+
+        if (res.data.cliente) {
+          setClienteSeleccionado(res.data.cliente);
         }
       });
     }
-  }, [id, clientes]);
+  }, [id]);
 
   const clientesFiltrados = clientes.filter(c =>
     `${c.nombre} ${c.apellido}`.toLowerCase().includes(busqueda.toLowerCase())
   );
 
-  const handleSeleccionarCliente = (cliente) => {
+  const handleSeleccionarCliente = cliente => {
     setClienteSeleccionado(cliente);
-    setSolicitud({ ...solicitud, clienteid: cliente.clienteid });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
+
+    if (!clienteSeleccionado) {
+      alert('Debes seleccionar un cliente');
+      return;
+    }
+
+    const payload = {
+      ...solicitud,
+      cliente: { clienteID: clienteSeleccionado.clienteID }
+    };
+
     const request = id
-      ? api.put(`/solicitudes/${id}`, solicitud)
-      : api.post('/solicitudes', solicitud);
+      ? api.put(`/solicitudes/${id}`, payload)
+      : api.post('/solicitudes', payload);
+
     request.then(() => navigate('/solicitudes'));
   };
 
@@ -74,26 +88,30 @@ const SolicitudPrestamoForm = () => {
           <ListGroup>
             {clientesFiltrados.map(cliente => (
               <ListGroup.Item
-                key={cliente.clienteid}
+                key={cliente.clienteID}
                 action
                 onClick={() => handleSeleccionarCliente(cliente)}
               >
-                {cliente.nombre} {cliente.apellido} (ID: {cliente.clienteid})
+                {cliente.nombre} {cliente.apellido} (ID: {cliente.clienteID})
               </ListGroup.Item>
             ))}
           </ListGroup>
         </>
       ) : (
         <Form onSubmit={handleSubmit}>
-          <h5>Cliente seleccionado: {clienteSeleccionado.nombre} {clienteSeleccionado.apellido}</h5>
+          <h5>
+            Cliente seleccionado: {clienteSeleccionado.nombre} {clienteSeleccionado.apellido}
+          </h5>
 
           <Form.Group className="mb-3">
             <Form.Label>Monto Solicitado</Form.Label>
             <Form.Control
               type="number"
               step="0.01"
-              value={solicitud.monto_solicitado}
-              onChange={e => setSolicitud({ ...solicitud, monto_solicitado: e.target.value })}
+              value={solicitud.montoSolicitado}
+              onChange={e =>
+                setSolicitud({ ...solicitud, montoSolicitado: e.target.value })
+              }
               required
             />
           </Form.Group>
@@ -117,7 +135,9 @@ const SolicitudPrestamoForm = () => {
               as="textarea"
               rows={3}
               value={solicitud.observaciones}
-              onChange={e => setSolicitud({ ...solicitud, observaciones: e.target.value })}
+              onChange={e =>
+                setSolicitud({ ...solicitud, observaciones: e.target.value })
+              }
             />
           </Form.Group>
 
@@ -126,13 +146,14 @@ const SolicitudPrestamoForm = () => {
             className="me-2"
             onClick={() => {
               setClienteSeleccionado(null);
-              setSolicitud({ ...solicitud, clienteid: '' });
             }}
           >
             Cambiar Cliente
           </Button>
 
-          <Button variant="primary" type="submit">{id ? 'Actualizar' : 'Crear'}</Button>
+          <Button variant="primary" type="submit">
+            {id ? 'Actualizar' : 'Crear'}
+          </Button>
         </Form>
       )}
     </Container>

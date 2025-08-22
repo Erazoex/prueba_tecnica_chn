@@ -1,6 +1,6 @@
 package com.banco.backend.controller;
 
-import com.banco.backend.model.PlanPago;
+import com.banco.backend.model.PlanPagos;
 import com.banco.backend.repository.PlanPagoRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,19 +12,19 @@ public class PlanPagoController {
     public PlanPagoController(PlanPagoRepository repo){ this.repo = repo; }
 
     @GetMapping
-    public List<PlanPago> all(){ return repo.findAll(); }
+    public List<PlanPagos> all(){ return repo.findAll(); }
 
     @GetMapping("/{id}")
-    public PlanPago getOne(@PathVariable Integer id){
+    public PlanPagos getOne(@PathVariable Integer id){
         return repo.findById(id).orElseThrow();
     }
 
     @PostMapping
-    public PlanPago create(@RequestBody PlanPago p){ return repo.save(p); }
+    public PlanPagos create(@RequestBody PlanPagos p){ return repo.save(p); }
 
     @PutMapping("/{id}")
-    public PlanPago update(@PathVariable Integer id, @RequestBody PlanPago p){
-        p.setCuotaid(id);
+    public PlanPagos update(@PathVariable Integer id, @RequestBody PlanPagos p){
+        p.setCuotaID(id);
         return repo.save(p);
     }
 

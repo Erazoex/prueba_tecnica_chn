@@ -4,7 +4,16 @@ import { api } from '../../api';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const ClienteForm = () => {
-  const [cliente, setCliente] = useState({ nombre: '', apellido: '', numero_identificacion: '', fecha_nacimiento: '', direccion: '', correo: '', telefono: '' });
+  const [cliente, setCliente] = useState({
+    nombre: '',
+    apellido: '',
+    numeroIdentificacion: '',
+    fechaNacimiento: '',
+    direccion: '',
+    correoElectronico: '',
+    telefono: ''
+  });
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -32,19 +41,19 @@ const ClienteForm = () => {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Número de Identificación</Form.Label>
-          <Form.Control type="text" value={cliente.numero_identificacion} onChange={e => setCliente({ ...cliente, numero_identificacion: e.target.value })} required/>
+          <Form.Control type="text" value={cliente.numeroIdentificacion} onChange={e => setCliente({ ...cliente, numeroIdentificacion: e.target.value })} required/>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Fecha de Nacimiento</Form.Label>
-          <Form.Control type="date" value={cliente.fecha_nacimiento} onChange={e => setCliente({ ...cliente, fecha_nacimiento: e.target.value })} required/>
+          <Form.Control type="date" value={cliente.fechaNacimiento} onChange={e => setCliente({ ...cliente, fechaNacimiento: e.target.value })} required/>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Dirección</Form.Label>
           <Form.Control type="text" value={cliente.direccion} onChange={e => setCliente({ ...cliente, direccion: e.target.value })} />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Correo</Form.Label>
-          <Form.Control type="email" value={cliente.correo} onChange={e => setCliente({ ...cliente, correo: e.target.value })} />
+          <Form.Label>Correo Electrónico</Form.Label>
+          <Form.Control type="email" value={cliente.correoElectronico} onChange={e => setCliente({ ...cliente, correoElectronico: e.target.value })} />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Teléfono</Form.Label>

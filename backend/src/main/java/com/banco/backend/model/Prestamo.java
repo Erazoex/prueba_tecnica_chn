@@ -3,68 +3,53 @@ package com.banco.backend.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
-@Table(name = "prestamos")
+@Table(name = "Prestamos") // Nombre de tabla según SQL
 public class Prestamo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "prestamoid")
-    private Integer prestamoid;
+    @Column(name = "prestamoID")
+    private Integer prestamoID;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "solicitudid", unique = true, nullable = false)
-    private SolicitudPrestamo solicitud;
+    @Column(name = "solicitudID", nullable = false, unique = true)
+    private Integer solicitudID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clienteid", nullable = false)
-    private Cliente cliente;
+    @Column(name = "clienteID", nullable = false)
+    private Integer clienteID;
 
-    @Column(name = "monto_aprobado", nullable = false, precision = 18, scale = 2)
-    private BigDecimal monto_aprobado;
+    @Column(name = "montoAprobado", nullable = false, precision = 18, scale = 2)
+    private BigDecimal montoAprobado;
 
-    @Column(name = "tasa_interes", nullable = false, precision = 5, scale = 2)
-    private BigDecimal tasa_interes;
+    @Column(name = "tasaInteres", nullable = false, precision = 5, scale = 2)
+    private BigDecimal tasaInteres;
 
-    @Column(name = "fecha_aprobacion", nullable = false)
-    private LocalDate fecha_aprobacion = LocalDate.now();
+    @Column(name = "fechaAprobacion", nullable = false)
+    private LocalDate fechaAprobacion = LocalDate.now();
 
     @Column(nullable = false, length = 20)
     private String estado;
 
-    @OneToMany(mappedBy = "prestamo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PlanPago> plan_pagos;
-
-    @OneToMany(mappedBy = "prestamo")
-    private List<Pago> pagos;
-
     // Getters y Setters
-    public Integer getPrestamoid() { return prestamoid; }
-    public void setPrestamoid(Integer prestamoid) { this.prestamoid = prestamoid; }
+    public Integer getPrestamoID() { return prestamoID; }
+    public void setPrestamoID(Integer prestamoID) { this.prestamoID = prestamoID; }
 
-    public SolicitudPrestamo getSolicitud() { return solicitud; }
-    public void setSolicitud(SolicitudPrestamo solicitud) { this.solicitud = solicitud; }
+    public Integer getSolicitudID() { return solicitudID; }
+    public void setSolicitudID(Integer solicitudID) { this.solicitudID = solicitudID; }
 
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public Integer getClienteID() { return clienteID; }
+    public void setClienteID(Integer clienteID) { this.clienteID = clienteID; }
 
-    public BigDecimal getMonto_aprobado() { return monto_aprobado; }
-    public void setMonto_aprobado(BigDecimal monto_aprobado) { this.monto_aprobado = monto_aprobado; }
+    public BigDecimal getMontoAprobado() { return montoAprobado; }
+    public void setMontoAprobado(BigDecimal montoAprobado) { this.montoAprobado = montoAprobado; }
 
-    public BigDecimal getTasa_interes() { return tasa_interes; }
-    public void setTasa_interes(BigDecimal tasa_interes) { this.tasa_interes = tasa_interes; }
+    public BigDecimal getTasaInteres() { return tasaInteres; }
+    public void setTasaInteres(BigDecimal tasaInteres) { this.tasaInteres = tasaInteres; }
 
-    public LocalDate getFecha_aprobacion() { return fecha_aprobacion; }
-    public void setFecha_aprobacion(LocalDate fecha_aprobacion) { this.fecha_aprobacion = fecha_aprobacion; }
+    public LocalDate getFechaAprobacion() { return fechaAprobacion; }
+    public void setFechaAprobacion(LocalDate fechaAprobacion) { this.fechaAprobacion = fechaAprobacion; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
-
-    public List<PlanPago> getPlan_pagos() { return plan_pagos; }
-    public void setPlan_pagos(List<PlanPago> plan_pagos) { this.plan_pagos = plan_pagos; }
-
-    public List<Pago> getPagos() { return pagos; }
-    public void setPagos(List<Pago> pagos) { this.pagos = pagos; }
 }

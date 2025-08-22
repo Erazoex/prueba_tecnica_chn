@@ -1,219 +1,136 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, ListGroup, InputGroup } from 'react-bootstrap';
+import { Form, Button, Container } from 'react-bootstrap';
 import { api } from '../../api';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const PagoForm = () => {
-  const [pago, setPago] = useState({
-    prestamoid: '',
-    cuotaid: '',
-    fecha_pago: '',
-    monto_pago: '',
-    capital_pagado: '',
-    interes_pagado: '',
-    mora_pagada: ''
+const PrestamoForm = () => {
+  const [prestamo, setPrestamo] = useState({
+    solicitudID: '',
+    clienteID: '',
+    montoAprobado: '',
+    tasaInteres: '',
+    fechaAprobacion: '',
+    estado: 'Activo'
   });
 
-  const [prestamos, setPrestamos] = useState([]);
-  const [planes, setPlanes] = useState([]);
-
-  const [busquedaPrestamo, setBusquedaPrestamo] = useState('');
-  const [prestamoSeleccionado, setPrestamoSeleccionado] = useState(null);
-
-  const [busquedaPlan, setBusquedaPlan] = useState('');
-  const [planSeleccionado, setPlanSeleccionado] = useState(null);
-
+  const [solicitudes, setSolicitudes] = useState([]);
+  const [clientes, setClientes] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Cargar préstamos y planes
+  // Cargar solicitudes y clientes
   useEffect(() => {
-    api.get('/prestamos').then(res => setPrestamos(res.data));
-    api.get('/planpagos').then(res => setPlanes(res.data));
+    api.get('/clientes').then(res => setClientes(res.data));
+    api.get('/solicitudes').then(res => setSolicitudes(res.data));
   }, []);
 
-  // Cargar pago si se edita
+  // Cargar préstamo si se edita
   useEffect(() => {
     if (id) {
-      api.get(`/pagos/${id}`).then(res => {
-        setPago(res.data);
-        if (res.data.prestamoid) {
-          const prestamo = prestamos.find(p => p.prestamoid === res.data.prestamoid);
-          if (prestamo) setPrestamoSeleccionado(prestamo);
-        }
-        if (res.data.cuotaid) {
-          const plan = planes.find(p => p.cuotaid === res.data.cuotaid);
-          if (plan) setPlanSeleccionado(plan);
-        }
-      });
+      api.get(`/prestamos/${id}`).then(res => setPrestamo(res.data));
     }
-  }, [id, prestamos, planes]);
-
-  const prestamosFiltrados = prestamos.filter(p =>
-    p.prestamoid.toString().includes(busquedaPrestamo)
-  );
-
-  const planesFiltrados = planes.filter(p =>
-    p.cuotaid.toString().includes(busquedaPlan)
-  );
-
-  const handleSeleccionarPrestamo = (prestamo) => {
-    setPrestamoSeleccionado(prestamo);
-    setPago({ ...pago, prestamoid: prestamo.prestamoid });
-  };
-
-  const handleSeleccionarPlan = (plan) => {
-    setPlanSeleccionado(plan);
-    setPago({ ...pago, cuotaid: plan.cuotaid });
-  };
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const request = id
-      ? api.put(`/pagos/${id}`, pago)
-      : api.post('/pagos', pago);
-    request.then(() => navigate('/pagos'));
+      ? api.put(`/prestamos/${id}`, prestamo)
+      : api.post('/prestamos', prestamo);
+    request.then(() => navigate('/prestamos'));
   };
 
   return (
     <Container className="mt-4">
-      <h2>{id ? 'Editar Pago' : 'Agregar Pago'}</h2>
+      <h2>{id ? 'Editar Préstamo' : 'Agregar Préstamo'}</h2>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Solicitud</Form.Label>
+          <Form.Select
+            value={prestamo.solicitudID}
+            onChange={e => setPrestamo({
+              ...prestamo,
+              solicitudID: e.target.value,
+              clienteID: solicitudes.find(s => s.solicitudID === parseInt(e.target.value))?.clienteID || ''
+            })}
+            required
+          >
+            <option value="">Seleccione una solicitud</option>
+            {solicitudes.map(s => {
+              const cliente = clientes.find(c => c.clienteID === s.cliente.clienteID);
+              const nombreCliente = cliente ? `${cliente.nombre} ${cliente.apellido}` : 'Desconocido';
+              return (
+                <option key={s.solicitudID} value={s.solicitudID}>
+                  {s.solicitudID} - {nombreCliente}
+                </option>
+              );
+            })}
+          </Form.Select>
+        </Form.Group>
 
-      {/* Selección de Préstamo */}
-      {!prestamoSeleccionado ? (
-        <>
-          <Form.Group className="mb-3">
-            <Form.Label>Buscar Préstamo</Form.Label>
-            <InputGroup>
-              <Form.Control
-                type="text"
-                placeholder="Escribe el ID del préstamo..."
-                value={busquedaPrestamo}
-                onChange={e => setBusquedaPrestamo(e.target.value)}
-              />
-            </InputGroup>
-          </Form.Group>
-          <ListGroup className="mb-3">
-            {prestamosFiltrados.map(p => (
-              <ListGroup.Item
-                key={p.prestamoid}
-                action
-                onClick={() => handleSeleccionarPrestamo(p)}
-              >
-                Préstamo ID: {p.prestamoid} - Monto Aprobado: {p.monto_aprobado}
-              </ListGroup.Item>
+        <Form.Group className="mb-3">
+          <Form.Label>Cliente</Form.Label>
+          <Form.Select
+            value={prestamo.clienteID}
+            onChange={e => setPrestamo({ ...prestamo, clienteID: e.target.value })}
+            required
+          >
+            <option value="">Seleccione un cliente</option>
+            {clientes.map(c => (
+              <option key={c.clienteID} value={c.clienteID}>
+                {c.nombre} {c.apellido} (ID: {c.clienteID})
+              </option>
             ))}
-          </ListGroup>
-        </>
-      ) : (
-        <h5>Préstamo seleccionado: ID {prestamoSeleccionado.prestamoid}</h5>
-      )}
+          </Form.Select>
+        </Form.Group>
 
-      {/* Selección de Plan */}
-      {!planSeleccionado ? (
-        <>
-          <Form.Group className="mb-3">
-            <Form.Label>Buscar Plan de Pago</Form.Label>
-            <InputGroup>
-              <Form.Control
-                type="text"
-                placeholder="Escribe el ID de la cuota..."
-                value={busquedaPlan}
-                onChange={e => setBusquedaPlan(e.target.value)}
-              />
-            </InputGroup>
-          </Form.Group>
-          <ListGroup className="mb-3">
-            {planesFiltrados.map(p => (
-              <ListGroup.Item
-                key={p.cuotaid}
-                action
-                onClick={() => handleSeleccionarPlan(p)}
-              >
-                Cuota ID: {p.cuotaid} - Préstamo ID: {p.prestamoid} - Cuota: {p.numero_cuota}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </>
-      ) : (
-        <h5>
-          Plan seleccionado: Cuota ID {planSeleccionado.cuotaid} - Préstamo ID {planSeleccionado.prestamoid}
-        </h5>
-      )}
+        <Form.Group className="mb-3">
+          <Form.Label>Monto Aprobado</Form.Label>
+          <Form.Control
+            type="number"
+            step="0.01"
+            value={prestamo.montoAprobado}
+            onChange={e => setPrestamo({ ...prestamo, montoAprobado: e.target.value })}
+            required
+          />
+        </Form.Group>
 
-      {/* Formulario de Pago */}
-      {prestamoSeleccionado && planSeleccionado && (
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Monto Pagado</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              value={pago.monto_pago}
-              onChange={e => setPago({ ...pago, monto_pago: e.target.value })}
-              required
-            />
-          </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Tasa de Interés (%)</Form.Label>
+          <Form.Control
+            type="number"
+            step="0.01"
+            value={prestamo.tasaInteres}
+            onChange={e => setPrestamo({ ...prestamo, tasaInteres: e.target.value })}
+            required
+          />
+        </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Capital Pagado</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              value={pago.capital_pagado}
-              onChange={e => setPago({ ...pago, capital_pagado: e.target.value })}
-            />
-          </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Fecha de Aprobación</Form.Label>
+          <Form.Control
+            type="date"
+            value={prestamo.fechaAprobacion ? prestamo.fechaAprobacion.split('T')[0] : ''}
+            onChange={e => setPrestamo({ ...prestamo, fechaAprobacion: e.target.value })}
+            required
+          />
+        </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Interés Pagado</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              value={pago.interes_pagado}
-              onChange={e => setPago({ ...pago, interes_pagado: e.target.value })}
-            />
-          </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Estado</Form.Label>
+          <Form.Select
+            value={prestamo.estado}
+            onChange={e => setPrestamo({ ...prestamo, estado: e.target.value })}
+          >
+            <option value="Activo">Activo</option>
+            <option value="Pagado">Pagado</option>
+            <option value="Incumplido">Incumplido</option>
+          </Form.Select>
+        </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Mora Pagada</Form.Label>
-            <Form.Control
-              type="number"
-              step="0.01"
-              value={pago.mora_pagada}
-              onChange={e => setPago({ ...pago, mora_pagada: e.target.value })}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Fecha de Pago</Form.Label>
-            <Form.Control
-              type="date"
-              value={pago.fecha_pago ? pago.fecha_pago.split('T')[0] : ''}
-              onChange={e => setPago({ ...pago, fecha_pago: e.target.value })}
-              required
-            />
-          </Form.Group>
-
-          <Button variant="secondary" className="me-2" onClick={() => {
-            setPrestamoSeleccionado(null);
-            setPago({ ...pago, prestamoid: '' });
-          }}>
-            Cambiar Préstamo
-          </Button>
-
-          <Button variant="secondary" className="me-2" onClick={() => {
-            setPlanSeleccionado(null);
-            setPago({ ...pago, cuotaid: '' });
-          }}>
-            Cambiar Plan
-          </Button>
-
-          <Button variant="primary" type="submit">{id ? 'Actualizar' : 'Crear'}</Button>
-        </Form>
-      )}
+        <Button variant="primary" type="submit">{id ? 'Actualizar' : 'Crear'}</Button>
+      </Form>
     </Container>
   );
 };
 
-export default PagoForm;
+export default PrestamoForm;

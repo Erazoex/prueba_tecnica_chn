@@ -24,7 +24,7 @@ public class SolicitudPrestamoController {
 
     @PutMapping("/{id}")
     public SolicitudPrestamo update(@PathVariable Integer id, @RequestBody SolicitudPrestamo s){
-        s.setSolicitudid(id);
+        s.setSolicitudID(id);
         return repo.save(s);
     }
 

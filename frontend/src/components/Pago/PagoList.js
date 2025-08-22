@@ -13,7 +13,7 @@ const PagoList = () => {
   const handleDelete = (id) => {
     if (window.confirm('¿Seguro que deseas eliminar este pago?')) {
       api.delete(`/pagos/${id}`).then(() =>
-        setPagos(pagos.filter(pg => pg.pagoid !== id))
+        setPagos(pagos.filter(pg => pg.pagoID !== id))
       );
     }
   };
@@ -39,19 +39,19 @@ const PagoList = () => {
         </thead>
         <tbody>
           {pagos.map((p) => (
-            <tr key={p.pagoid}>
-              <td>{p.pagoid}</td>
-              <td>{p.prestamoid}</td>
-              <td>{p.cuotaid}</td>
-              <td>{p.monto_pagado}</td>
-              <td>{p.capital_pagado}</td>
-              <td>{p.interes_pagado}</td>
-              <td>{p.mora_pagada}</td>
-              <td>{p.fecha_pago ? new Date(p.fecha_pago).toLocaleDateString() : ''}</td>
-              <td>{p.metodo_pago}</td>
+            <tr key={p.pagoID}>
+              <td>{p.pagoID}</td>
+              <td>{p.prestamoID}</td>
+              <td>{p.cuotaID}</td>
+              <td>{p.montoPago}</td>
+              <td>{p.capitalPagado}</td>
+              <td>{p.interesPagado}</td>
+              <td>{p.moraPagada}</td>
+              <td>{p.fechaPago ? new Date(p.fechaPago).toLocaleDateString() : ''}</td>
+              <td>{p.metodoPago}</td>
               <td>
-                <Link to={`/pagos/edit/${p.pagoid}`} className="btn btn-primary btn-sm me-2">Editar</Link>
-                <Button variant="danger" size="sm" onClick={() => handleDelete(p.pagoid)}>Eliminar</Button>
+                <Link to={`/pagos/edit/${p.pagoID}`} className="btn btn-primary btn-sm me-2">Editar</Link>
+                <Button variant="danger" size="sm" onClick={() => handleDelete(p.pagoID)}>Eliminar</Button>
               </td>
             </tr>
           ))}

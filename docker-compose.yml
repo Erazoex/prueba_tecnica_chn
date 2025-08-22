@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   sqlserver:
     build: ./database
@@ -9,8 +11,9 @@ services:
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
     volumes:
-      - ./init:/docker-entrypoint-initdb.d
       - sql_data:/var/opt/mssql
+    networks:
+      - banco-network
 
   backend:
     build: ./backend
@@ -23,6 +26,22 @@ services:
       SPRING_DATASOURCE_PASSWORD: StrongPass1!
     depends_on:
       - sqlserver
+    networks:
+      - banco-network
+
+  frontend:
+    build: ./frontend
+    container_name: react_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - banco-network
 
 volumes:
-  sql_data: 
+  sql_data:
+
+networks:
+  banco-network:
+    driver: bridge

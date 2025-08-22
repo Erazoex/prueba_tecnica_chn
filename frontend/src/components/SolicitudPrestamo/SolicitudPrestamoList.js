@@ -13,7 +13,7 @@ const SolicitudPrestamoList = () => {
   const handleDelete = (id) => {
     if (window.confirm('¿Seguro que deseas eliminar esta solicitud?')) {
       api.delete(`/solicitudes/${id}`).then(() =>
-        setSolicitudes(solicitudes.filter(sol => sol.solicitudid !== id))
+        setSolicitudes(solicitudes.filter(sol => sol.solicitudID !== id))
       );
     }
   };
@@ -38,20 +38,20 @@ const SolicitudPrestamoList = () => {
         </thead>
         <tbody>
           {solicitudes.map((s) => (
-            <tr key={s.solicitudid}>
-              <td>{s.solicitudid}</td>
+            <tr key={s.solicitudID}>
+              <td>{s.solicitudID}</td>
               <td>
                 {s.cliente
                   ? `${s.cliente.nombre} ${s.cliente.apellido}`
-                  : `ID: ${s.clienteid}`}
+                  : `ID: ${s.clienteID}`}
               </td>
-              <td>{s.monto_solicitado}</td>
-              <td>{s.fecha_solicitud ? new Date(s.fecha_solicitud).toLocaleDateString() : ''}</td>
+              <td>{s.montoSolicitado}</td>
+              <td>{s.fechaSolicitud ? new Date(s.fechaSolicitud).toLocaleDateString() : ''}</td>
               <td>{s.estado}</td>
               <td>{s.observaciones || '-'}</td>
               <td>
                 <Link
-                  to={`/solicitudes/edit/${s.solicitudid}`}
+                  to={`/solicitudes/edit/${s.solicitudID}`}
                   className="btn btn-primary btn-sm me-2"
                 >
                   Editar
@@ -59,7 +59,7 @@ const SolicitudPrestamoList = () => {
                 <Button
                   variant="danger"
                   size="sm"
-                  onClick={() => handleDelete(s.solicitudid)}
+                  onClick={() => handleDelete(s.solicitudID)}
                 >
                   Eliminar
                 </Button>

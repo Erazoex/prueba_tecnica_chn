@@ -12,7 +12,7 @@ const PlanPagoList = () => {
 
   const handleDelete = (id) => {
     api.delete(`/planpagos/${id}`).then(() =>
-      setPlanes(planes.filter(p => p.cuotaid !== id))
+      setPlanes(planes.filter(p => p.cuotaID !== id))
     );
   };
 
@@ -38,18 +38,18 @@ const PlanPagoList = () => {
         </thead>
         <tbody>
           {planes.map(p => (
-            <tr key={p.cuotaid}>
-              <td>{p.cuotaid}</td>
-              <td>{p.prestamoid}</td>
-              <td>{p.numero_cuota}</td>
-              <td>{p.fecha_vencimiento ? new Date(p.fecha_vencimiento).toLocaleDateString() : ''}</td>
-              <td>{p.monto_cuota}</td>
+            <tr key={p.cuotaID}>
+              <td>{p.cuotaID}</td>
+              <td>{p.prestamoID}</td>
+              <td>{p.numeroCuota}</td>
+              <td>{p.fechaVencimiento ? new Date(p.fechaVencimiento).toLocaleDateString() : ''}</td>
+              <td>{p.montoCuota}</td>
               <td>{p.capital}</td>
               <td>{p.interes}</td>
               <td>{p.estado}</td>
               <td>
                 <Link
-                  to={`/planpagos/edit/${p.cuotaid}`}
+                  to={`/planpagos/edit/${p.cuotaID}`}
                   className="btn btn-primary btn-sm me-2"
                 >
                   Editar
@@ -57,7 +57,7 @@ const PlanPagoList = () => {
                 <Button
                   variant="danger"
                   size="sm"
-                  onClick={() => handleDelete(p.cuotaid)}
+                  onClick={() => handleDelete(p.cuotaID)}
                 >
                   Eliminar
                 </Button>

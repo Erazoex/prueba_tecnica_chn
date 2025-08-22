@@ -5,59 +5,57 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "pagos")
+@Table(name = "Pagos")
 public class Pago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pagoid")
-    private Integer pagoid;
+    @Column(name = "pagoID")
+    private Integer pagoID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prestamoid", nullable = false)
-    private Prestamo prestamo;
+    @Column(name = "prestamoID", nullable = false)
+    private Integer prestamoID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cuotaid")
-    private PlanPago plan_pago;
+    @Column(name = "cuotaID")
+    private Integer cuotaID;
 
-    @Column(name = "fecha_pago", nullable = false)
-    private LocalDate fecha_pago = LocalDate.now();
+    @Column(name = "fechaPago", nullable = false)
+    private LocalDate fechaPago = LocalDate.now();
 
-    @Column(name = "monto_pago", nullable = false, precision = 18, scale = 2)
-    private BigDecimal monto_pago;
+    @Column(name = "montoPago", nullable = false, precision = 18, scale = 2)
+    private BigDecimal montoPago;
 
-    @Column(name = "capital_pagado", precision = 18, scale = 2)
-    private BigDecimal capital_pagado = BigDecimal.ZERO;
+    @Column(name = "capitalPagado", precision = 18, scale = 2)
+    private BigDecimal capitalPagado = BigDecimal.ZERO;
 
-    @Column(name = "interes_pagado", precision = 18, scale = 2)
-    private BigDecimal interes_pagado = BigDecimal.ZERO;
+    @Column(name = "interesPagado", precision = 18, scale = 2)
+    private BigDecimal interesPagado = BigDecimal.ZERO;
 
-    @Column(name = "mora_pagada", precision = 18, scale = 2)
-    private BigDecimal mora_pagada = BigDecimal.ZERO;
+    @Column(name = "moraPagada", precision = 18, scale = 2)
+    private BigDecimal moraPagada = BigDecimal.ZERO;
 
     // Getters y Setters
-    public Integer getPagoid() { return pagoid; }
-    public void setPagoid(Integer pagoid) { this.pagoid = pagoid; }
+    public Integer getPagoID() { return pagoID; }
+    public void setPagoID(Integer pagoID) { this.pagoID = pagoID; }
 
-    public Prestamo getPrestamo() { return prestamo; }
-    public void setPrestamo(Prestamo prestamo) { this.prestamo = prestamo; }
+    public Integer getPrestamoID() { return prestamoID; }
+    public void setPrestamoID(Integer prestamoID) { this.prestamoID = prestamoID; }
 
-    public PlanPago getPlan_pago() { return plan_pago; }
-    public void setPlan_pago(PlanPago plan_pago) { this.plan_pago = plan_pago; }
+    public Integer getCuotaID() { return cuotaID; }
+    public void setCuotaID(Integer cuotaID) { this.cuotaID = cuotaID; }
 
-    public LocalDate getFecha_pago() { return fecha_pago; }
-    public void setFecha_pago(LocalDate fecha_pago) { this.fecha_pago = fecha_pago; }
+    public LocalDate getFechaPago() { return fechaPago; }
+    public void setFechaPago(LocalDate fechaPago) { this.fechaPago = fechaPago; }
 
-    public BigDecimal getMonto_pago() { return monto_pago; }
-    public void setMonto_pago(BigDecimal monto_pago) { this.monto_pago = monto_pago; }
+    public BigDecimal getMontoPago() { return montoPago; }
+    public void setMontoPago(BigDecimal montoPago) { this.montoPago = montoPago; }
 
-    public BigDecimal getCapital_pagado() { return capital_pagado; }
-    public void setCapital_pagado(BigDecimal capital_pagado) { this.capital_pagado = capital_pagado; }
+    public BigDecimal getCapitalPagado() { return capitalPagado; }
+    public void setCapitalPagado(BigDecimal capitalPagado) { this.capitalPagado = capitalPagado; }
 
-    public BigDecimal getInteres_pagado() { return interes_pagado; }
-    public void setInteres_pagado(BigDecimal interes_pagado) { this.interes_pagado = interes_pagado; }
+    public BigDecimal getInteresPagado() { return interesPagado; }
+    public void setInteresPagado(BigDecimal interesPagado) { this.interesPagado = interesPagado; }
 
-    public BigDecimal getMora_pagada() { return mora_pagada; }
-    public void setMora_pagada(BigDecimal mora_pagada) { this.mora_pagada = mora_pagada; }
+    public BigDecimal getMoraPagada() { return moraPagada; }
+    public void setMoraPagada(BigDecimal moraPagada) { this.moraPagada = moraPagada; }
 }

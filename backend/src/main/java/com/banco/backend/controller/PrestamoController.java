@@ -24,7 +24,7 @@ public class PrestamoController {
 
     @PutMapping("/{id}")
     public Prestamo update(@PathVariable Integer id, @RequestBody Prestamo p){
-        p.setPrestamoid(id);
+        p.setPrestamoID(id);
         return repo.save(p);
     }
 

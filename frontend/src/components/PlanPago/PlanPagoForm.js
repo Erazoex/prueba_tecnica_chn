@@ -5,10 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const PlanPagoForm = () => {
   const [plan, setPlan] = useState({
-    prestamoid: '',
-    numero_cuota: '',
-    fecha_vencimiento: '',
-    monto_cuota: '',
+    prestamoID: '',
+    numeroCuota: '',
+    fechaVencimiento: '',
+    montoCuota: '',
     capital: '',
     interes: '',
     estado: 'Pendiente'
@@ -21,18 +21,16 @@ const PlanPagoForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Cargar préstamos
   useEffect(() => {
     api.get('/prestamos').then(res => setPrestamos(res.data));
   }, []);
 
-  // Cargar plan si se edita
   useEffect(() => {
     if (id) {
       api.get(`/planpagos/${id}`).then(res => {
         setPlan(res.data);
-        if (res.data.prestamoid) {
-          const prestamo = prestamos.find(p => p.prestamoid === res.data.prestamoid);
+        if (res.data.prestamoID) {
+          const prestamo = prestamos.find(p => p.prestamoID === res.data.prestamoID);
           if (prestamo) setPrestamoSeleccionado(prestamo);
         }
       });
@@ -40,12 +38,12 @@ const PlanPagoForm = () => {
   }, [id, prestamos]);
 
   const prestamosFiltrados = prestamos.filter(p =>
-    p.prestamoid.toString().includes(busquedaPrestamo)
+    p.prestamoID.toString().includes(busquedaPrestamo)
   );
 
   const handleSeleccionarPrestamo = (prestamo) => {
     setPrestamoSeleccionado(prestamo);
-    setPlan({ ...plan, prestamoid: prestamo.prestamoid });
+    setPlan({ ...plan, prestamoID: prestamo.prestamoID });
   };
 
   const handleSubmit = (e) => {
@@ -77,18 +75,18 @@ const PlanPagoForm = () => {
           <ListGroup className="mb-3">
             {prestamosFiltrados.map(p => (
               <ListGroup.Item
-                key={p.prestamoid}
+                key={p.prestamoID}
                 action
                 onClick={() => handleSeleccionarPrestamo(p)}
               >
-                Préstamo ID: {p.prestamoid} - Monto Aprobado: {p.monto_aprobado} - Estado: {p.estado}
+                Préstamo ID: {p.prestamoID} - Monto Aprobado: {p.montoAprobado} - Estado: {p.estado}
               </ListGroup.Item>
             ))}
           </ListGroup>
         </>
       ) : (
         <h5>
-          Préstamo seleccionado: ID {prestamoSeleccionado.prestamoid} - Monto Aprobado {prestamoSeleccionado.monto_aprobado}
+          Préstamo seleccionado: ID {prestamoSeleccionado.prestamoID} - Monto Aprobado {prestamoSeleccionado.montoAprobado}
         </h5>
       )}
 
@@ -98,8 +96,8 @@ const PlanPagoForm = () => {
             <Form.Label>Número de Cuota</Form.Label>
             <Form.Control
               type="number"
-              value={plan.numero_cuota}
-              onChange={e => setPlan({ ...plan, numero_cuota: e.target.value })}
+              value={plan.numeroCuota}
+              onChange={e => setPlan({ ...plan, numeroCuota: e.target.value })}
               required
             />
           </Form.Group>
@@ -108,8 +106,8 @@ const PlanPagoForm = () => {
             <Form.Label>Fecha de Vencimiento</Form.Label>
             <Form.Control
               type="date"
-              value={plan.fecha_vencimiento}
-              onChange={e => setPlan({ ...plan, fecha_vencimiento: e.target.value })}
+              value={plan.fechaVencimiento}
+              onChange={e => setPlan({ ...plan, fechaVencimiento: e.target.value })}
               required
             />
           </Form.Group>
@@ -119,8 +117,8 @@ const PlanPagoForm = () => {
             <Form.Control
               type="number"
               step="0.01"
-              value={plan.monto_cuota}
-              onChange={e => setPlan({ ...plan, monto_cuota: e.target.value })}
+              value={plan.montoCuota}
+              onChange={e => setPlan({ ...plan, montoCuota: e.target.value })}
               required
             />
           </Form.Group>
@@ -165,7 +163,7 @@ const PlanPagoForm = () => {
             className="me-2"
             onClick={() => {
               setPrestamoSeleccionado(null);
-              setPlan({ ...plan, prestamoid: '' });
+              setPlan({ ...plan, prestamoID: '' });
             }}
           >
             Cambiar Préstamo
